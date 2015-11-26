@@ -92,6 +92,19 @@
     self.selectionStyle = self.rowDescriptor.isDisabled ? UITableViewCellSelectionStyleNone : UITableViewCellSelectionStyleDefault;
     self.textLabel.text = [NSString stringWithFormat:@"%@%@", self.rowDescriptor.title, self.rowDescriptor.required && self.rowDescriptor.sectionDescriptor.formDescriptor.addAsteriskToRequiredRowsTitle ? @"*" : @""];
     self.detailTextLabel.text = [self valueDisplayText];
+    
+    if (self.rowDescriptor.valueTransformer){
+        NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
+        NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
+        id tranformedValue = [valueTransformer transformedValue:self.rowDescriptor.value];
+        if (![tranformedValue isKindOfClass:[NSString class]]){
+            self.detailTextLabel.attributedText = tranformedValue;
+        } else {
+            self.detailTextLabel.text = tranformedValue;
+        }
+    } else {
+        self.detailTextLabel.text = [self valueDisplayText];
+    }
 }
 
 -(BOOL)formDescriptorCellCanBecomeFirstResponder

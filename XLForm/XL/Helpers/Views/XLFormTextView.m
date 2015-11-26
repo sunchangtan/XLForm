@@ -39,6 +39,7 @@
         self.scrollsToTop = NO;
         self.contentInset = UIEdgeInsetsMake(0, -4, 0, 0);
         [self setPlaceholder:@""];
+        [self setPlaceholderTextAlignment:NSTextAlignmentLeft];
         [self setPlaceholderColor:[UIColor colorWithRed:.78 green:.78 blue:.80 alpha:1.0]];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textChanged:) name:UITextViewTextDidChangeNotification object:nil];
     }
@@ -67,18 +68,20 @@
 {
     if([[self placeholder] length] > 0){
         if (_placeHolderLabel == nil ){
-            _placeHolderLabel = [[UILabel alloc] initWithFrame:CGRectMake(4,8,self.bounds.size.width - 16,0)];
+            _placeHolderLabel = [[UILabel alloc] initWithFrame:CGRectMake(4,8,self.bounds.size.width - 8,self.bounds.size.height - 8)];
             _placeHolderLabel.lineBreakMode = NSLineBreakByWordWrapping;
             _placeHolderLabel.numberOfLines = 0;
             _placeHolderLabel.backgroundColor = [UIColor clearColor];
             _placeHolderLabel.textColor = self.placeholderColor;
             _placeHolderLabel.alpha = 0;
             _placeHolderLabel.tag = 999;
+            _placeHolderLabel.textAlignment = _placeholderTextAlignment;
             [self addSubview:_placeHolderLabel];
         }
         _placeHolderLabel.text = self.placeholder;
         _placeHolderLabel.font = self.font;
         [_placeHolderLabel sizeToFit];
+        _placeHolderLabel.frame = CGRectMake(4,8,self.bounds.size.width - 8,_placeHolderLabel.frame.size.height);
         [self sendSubviewToBack:_placeHolderLabel];
     }
     if( [[self text] length] == 0 && [[self placeholder] length] > 0 ){
